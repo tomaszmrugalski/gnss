@@ -14,9 +14,27 @@
         tools:layout_editor_absoluteY="1dp">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/button1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:text="Get Location" />
+
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="match_parent"
+            android:layout_height="195dp"
+            android:text="TextView" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/debug"
+            android:layout_width="match_parent"
+            android:layout_height="233dp"
+            android:text="debug" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
