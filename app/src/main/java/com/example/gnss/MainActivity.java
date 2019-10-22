@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
 
     private LocationManager lm;
     private ThGpsListener gpsListener;
+    private ThNMEAListener nmeaListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
         gpsListener = new ThGpsListener();
         gpsListener.tv = findViewById(R.id.tv);
         gpsListener.debug = findViewById(R.id.debug);
+
+        nmeaListener = new ThNMEAListener();
+        nmeaListener.debug = findViewById(R.id.debug);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -46,5 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void registerListener() {
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsListener);
+
+        lm.addNmeaListener(nmeaListener);
     }
 };
