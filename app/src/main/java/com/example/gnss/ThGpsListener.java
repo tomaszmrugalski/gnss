@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import java.util.Date;
 
+import static android.location.Location.FORMAT_SECONDS;
+
 public class ThGpsListener implements LocationListener {
 
     public TextView tv;
@@ -37,11 +39,24 @@ public class ThGpsListener implements LocationListener {
     private void przetwarzajLokalizacje(Location location) {
         // debug.append(". ");
         String info;
-        info = "Lat:" + location.getLatitude()+ " Long:" + location.getLongitude();
+        info = "Lat:" + location.convert(location.getLatitude(), FORMAT_SECONDS) +
+               " Long:" + location.convert(location.getLongitude(), FORMAT_SECONDS);
         if (prevLocation != null){
             float bearing = prevLocation.bearingTo(location);
             float distance = prevLocation.distanceTo(location);
             info += "\nDist:" + distance + " Azimuth:" + bearing;
+        }
+
+        if (location.hasSpeed()) {
+            info += "\nSpeed:" + location.getSpeed() + " [m/s]";
+        }
+
+        if (location.hasAltitude()) {
+            info += "\nAltitude: " + location.getAltitude() + " [mals]";
+        }
+
+        if (location.hasAccuracy()) {
+            info += "\nAccuracy: " + location.getAccuracy() + " [m] ";
         }
 
         Date d;
