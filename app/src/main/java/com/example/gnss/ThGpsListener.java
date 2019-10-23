@@ -37,11 +37,11 @@ public class ThGpsListener implements LocationListener {
     private void przetwarzajLokalizacje(Location location) {
         // debug.append(". ");
         String info;
-        info = location.getLatitude()+ " " + location.getLongitude();
-        if(prevLocation!=null){
-            float bearing= prevLocation.bearingTo(location);
-            float distance= prevLocation.distanceTo(location);
-            info+= " "+distance+" "+bearing;
+        info = "Lat:" + location.getLatitude()+ " Long:" + location.getLongitude();
+        if (prevLocation != null){
+            float bearing = prevLocation.bearingTo(location);
+            float distance = prevLocation.distanceTo(location);
+            info += "\nDist:" + distance + " Azimuth:" + bearing;
         }
 
         Date d;
