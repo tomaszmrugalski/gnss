@@ -7,8 +7,10 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,8 +31,11 @@ public class MainActivity extends AppCompatActivity {
         gpsListener.tv = findViewById(R.id.tv);
         gpsListener.debug = findViewById(R.id.nmea);
 
+        TextView nmea = findViewById(R.id.nmea);
+        nmea.setMovementMethod(new ScrollingMovementMethod());
+
         nmeaListener = new ThNMEAListener();
-        nmeaListener.debug = findViewById(R.id.nmea);
+        nmeaListener.debug = nmea;
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
