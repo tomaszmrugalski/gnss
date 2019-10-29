@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">gnss</string>
+    <string name="title_activity_poi">POIs</string>
 </resources>

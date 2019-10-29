@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -50,9 +51,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                gpsListener.tv.setText("Click!");
+                launchPoi();
             }
         });
+    }
+
+    private void launchPoi() {
+        Intent intent = new Intent(this, PoiActivity.class);
+        startActivity(intent);
     }
 
     //@Override
