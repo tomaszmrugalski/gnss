@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">gnss</string>
+    <string name="app_name">Tomek GNSS Lab</string>
     <string name="title_activity_poi">POIs</string>
 </resources>
