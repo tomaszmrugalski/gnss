@@ -51,9 +51,10 @@ public class PoiActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                EditText lon = findViewById(R.id.)
+                EditText lon = findViewById(R.id.longitudeBox);
+                EditText lat = findViewById(R.id.lattitudeBox);
 
-            poiListTxt.add("new data");
+            poiListTxt.add(lon.getText().toString() + ", " + lat.getText().toString());
             Log.d("onClick", Integer.toString(poiListTxt.size()) + " element(s)");
             adapter.notifyDataSetChanged();
             poiList.invalidateViews();
