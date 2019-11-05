@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     private LocationManager lm;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         gpsListener = new ThGpsListener();
         gpsListener.tv = findViewById(R.id.tv);
         gpsListener.debug = findViewById(R.id.nmea);
+
 
         TextView nmea = findViewById(R.id.nmea);
         nmea.setMovementMethod(new ScrollingMovementMethod());
@@ -60,11 +63,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PoiActivity.class);
         startActivity(intent);
     }
-
-    //@Override
-    //public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) {
-    //    registerListener();
-    //}
 
     protected void registerListener() {
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsListener);

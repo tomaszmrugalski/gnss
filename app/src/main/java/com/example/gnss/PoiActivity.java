@@ -2,11 +2,7 @@ package com.example.gnss;
 
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
 import android.view.View;
@@ -30,10 +26,14 @@ public class PoiActivity extends AppCompatActivity {
         final ArrayAdapter<String> adapter;
         poiList = findViewById(R.id.poiList);
 
+
+        final ArrayList<Poi> pois = PoiList.getInstance().pois_;
+
         poiListTxt = new ArrayList<String>();
-        poiListTxt.add("54, 18");
-        poiListTxt.add("0,45");
-        poiListTxt.add("1,1");
+        for (Poi poi : pois) {
+            poiListTxt.add(poi.getText());
+        }
+
         adapter = new ArrayAdapter<String>(this, R.layout.activity_list_view, R.id.textView5, poiListTxt);
         poiList.setAdapter(adapter);
 
@@ -51,15 +51,23 @@ public class PoiActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                EditText lon = findViewById(R.id.longitudeBox);
-                EditText lat = findViewById(R.id.lattitudeBox);
+            EditText lon = findViewById(R.id.longitudeBox);
+            EditText lat = findViewById(R.id.lattitudeBox);
+            EditText name = findViewById(R.id.poiName);
 
-            poiListTxt.add(lon.getText().toString() + ", " + lat.getText().toString());
-            Log.d("onClick", Integer.toString(poiListTxt.size()) + " element(s)");
-            adapter.notifyDataSetChanged();
-            poiList.invalidateViews();
+            Poi p = new Poi(Double.parseDouble(lon.getText().toString()), Double.parseDouble(lat.getText().toString()), name.getText().toString());
+
+            addPoi(p);
+            pois.add(p);
+
             }
         });
+    }
+
+    private void addPoi(Poi p) {
+        poiListTxt.add(p.getText());
+        Log.d("onClick", Integer.toString(poiListTxt.size()) + " element(s)");
+        poiList.invalidateViews();
     }
 
 }
