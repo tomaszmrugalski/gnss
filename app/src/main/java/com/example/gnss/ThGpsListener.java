@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.TextView;
+import android.content.SharedPreferences;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,6 +20,7 @@ public class ThGpsListener implements LocationListener {
 
     public TextView tv;
     public TextView debug;
+    public SharedPreferences.Editor pref;
 
     @Override
     public void onLocationChanged(Location location) {
@@ -49,9 +51,6 @@ public class ThGpsListener implements LocationListener {
                 " Long:" + location.convert(location.getLongitude(), FORMAT_SECONDS);
 
 
-        // Write the contents to a location.txt file
-        writeToFile("location.txt", info);
-
         if (prevLocation != null) {
             float bearing = prevLocation.bearingTo(location);
             float distance = prevLocation.distanceTo(location);
@@ -72,9 +71,16 @@ public class ThGpsListener implements LocationListener {
 
         Date d;
         d = new Date(location.getTime());
+
+        // Write the contents to a location.txt file
+        writeToFile("location.txt", d.toString() + ": " + info);
+
+
         info = "" + d.toString() + "\n" + info + "\n" + "Nearest POI: " + getNearestPoi(location);
         tv.setText(info);
         prevLocation = location;
+
+        savePreferences(location);
     }
 
     String getNearestPoi(Location l) {
@@ -83,6 +89,7 @@ public class ThGpsListener implements LocationListener {
         for (Poi p : PoiList.getInstance().pois_) {
             if (nearest == null) {
                 nearest = p;
+                dist = dist(l.getLongitude(), l.getLatitude(), p.lon, p.lat);
                 continue;
             }
             Double tmp = dist(l.getLongitude(), l.getLatitude(), p.lon, p.lat);
@@ -131,6 +138,12 @@ public class ThGpsListener implements LocationListener {
         PrintWriter pw = new PrintWriter(fos);
         pw.println(txt);
         pw.close();
+    }
+
+    void savePreferences(Location l) {
+        pref.putString("lat", String.format("%2.4f", l.getLatitude()));
+        pref.putString("long", String.format("%2.4f", l.getLongitude()));
+
     }
 
 }
