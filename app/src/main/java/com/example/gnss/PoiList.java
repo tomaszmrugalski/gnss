@@ -16,9 +16,9 @@ class PoiList {
         pois_ = new ArrayList<Poi>();
 
         // Come up with some better fabricated data!
-        pois_.add(new Poi(18.1, 54.9, "Pkt 1"));
-        pois_.add(new Poi(18.2, 54.8, "Pkt 2"));
-        pois_.add(new Poi(18.3, 54.7, "Pkt 3"));
-        pois_.add(new Poi(18.4, 54.6, "Pkt 4"));
+        pois_.add(new Poi(18.6163, 54.3717, "PG"));
+        pois_.add(new Poi(18.5305, 54.5189, "Gdynia"));
+        pois_.add(new Poi(18.7773, 54.0919, "Tczew"));
+        pois_.add(new Poi(18.3650, 54.3420, "Zukowo"));
     }
 }
