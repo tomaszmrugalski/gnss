@@ -11,10 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/include"
-            layout="@layout/content_poi" />
-
         <Button
             android:id="@+id/button1"
             android:layout_width="195dp"
@@ -44,13 +40,19 @@
         <ListView
             android:id="@+id/poiList"
             android:layout_width="410dp"
-            android:layout_height="400dp"
-            android:layout_marginTop="84dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/button1" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="96dp"
+            app:layout_constraintTop_toBottomOf="@+id/button2"
+            tools:layout_editor_absoluteX="5dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_poi"
+        android:layout_width="429dp"
+        android:layout_height="match_parent"
+        app:layout_anchor="@+id/constraintLayout"
+        app:layout_anchorGravity="center" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
