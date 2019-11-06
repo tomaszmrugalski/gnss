@@ -3,8 +3,14 @@ package com.example.gnss;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.Date;
 
 import static android.location.Location.FORMAT_SECONDS;
@@ -34,14 +40,19 @@ public class ThGpsListener implements LocationListener {
         // debug.append("onProviderDisabled ");
     }
 
-    Location prevLocation= null;
+    Location prevLocation = null;
 
     private void przetwarzajLokalizacje(Location location) {
         // debug.append(". ");
         String info;
         info = "Lat:" + location.convert(location.getLatitude(), FORMAT_SECONDS) +
-               " Long:" + location.convert(location.getLongitude(), FORMAT_SECONDS);
-        if (prevLocation != null){
+                " Long:" + location.convert(location.getLongitude(), FORMAT_SECONDS);
+
+
+        // Write the contents to a location.txt file
+        writeToFile("location.txt", info);
+
+        if (prevLocation != null) {
             float bearing = prevLocation.bearingTo(location);
             float distance = prevLocation.distanceTo(location);
             info += "\nDist:" + distance + " Azimuth:" + bearing;
@@ -61,15 +72,15 @@ public class ThGpsListener implements LocationListener {
 
         Date d;
         d = new Date(location.getTime());
-        info = "" + d.toString() + "\n" + info + "\n" + "Nearest POI: " + getNearestPoi(location).getText();
+        info = "" + d.toString() + "\n" + info + "\n" + "Nearest POI: " + getNearestPoi(location);
         tv.setText(info);
-        prevLocation= location;
+        prevLocation = location;
     }
 
-    Poi getNearestPoi(Location l) {
+    String getNearestPoi(Location l) {
         Poi nearest = null;
         Double dist = 40000000.0;
-        for (Poi p: PoiList.getInstance().pois_) {
+        for (Poi p : PoiList.getInstance().pois_) {
             if (nearest == null) {
                 nearest = p;
                 continue;
@@ -82,7 +93,7 @@ public class ThGpsListener implements LocationListener {
             }
         }
 
-        return nearest;
+        return nearest.getText() + " (" + String.format("%4.3f", dist) + "km)";
     }
 
     Double degreesToRadians(Double degrees) {
@@ -93,16 +104,34 @@ public class ThGpsListener implements LocationListener {
 
         Double earthRadiusKm = 6371.0;
 
-        Double dLat = degreesToRadians(lat2-lat1);
-        Double dLon = degreesToRadians(long2-long1);
+        Double dLat = degreesToRadians(lat2 - lat1);
+        Double dLon = degreesToRadians(long2 - long1);
 
         lat1 = degreesToRadians(lat1);
         lat2 = degreesToRadians(lat2);
 
-        Double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
-        Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        Double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+        Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return earthRadiusKm * c;
     }
+
+    private void writeToFile(String filename, String txt) {
+        File fex = Environment.getExternalStorageDirectory();
+        fex = new File(fex, filename);
+        FileOutputStream fos = null;
+        try {
+            boolean append = true;
+            fos = new FileOutputStream(fex, append);
+        } catch (FileNotFoundException ex) {
+            //deal with the problem
+            Log.e("ERR","writeToFile exception: " + ex);
+            return;
+        }
+        PrintWriter pw = new PrintWriter(fos);
+        pw.println(txt);
+        pw.close();
+    }
+
 }
 
