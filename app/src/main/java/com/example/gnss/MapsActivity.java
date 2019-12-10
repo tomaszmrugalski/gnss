@@ -14,6 +14,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -61,10 +63,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        addMarkers();
+    }
+
+    private void addMarkers() {
+        final ArrayList<Poi> pois = PoiList.getInstance().pois_;
+
+        LatLng last_pos = new LatLng(54, 18);
+        for (Poi poi : pois) {
+            LatLng pos = new LatLng(poi.lat, poi.lon);
+            mMap.addMarker(new MarkerOptions().position(pos).title(poi.descr));
+            last_pos = pos;
+        }
+        mMap.moveCamera((CameraUpdateFactory.newLatLng(last_pos)));
     }
 
     private void launchPoiActivity() {
