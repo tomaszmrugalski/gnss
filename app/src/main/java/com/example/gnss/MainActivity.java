@@ -60,19 +60,14 @@ public class MainActivity extends AppCompatActivity {
 
         registerListener();
 
-        Button bt1 = (Button) findViewById(R.id.button1);
+        Button bt1 = (Button) findViewById(R.id.button);
         bt1.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                launchPoi();
+                finish();
             }
         });
-    }
-
-    private void launchPoi() {
-        Intent intent = new Intent(this, PoiActivity.class);
-        startActivity(intent);
     }
 
     protected void registerListener() {
