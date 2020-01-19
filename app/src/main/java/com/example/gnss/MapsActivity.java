@@ -1,7 +1,9 @@
 package com.example.gnss;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -21,7 +23,9 @@ import java.util.ArrayList;
 import android.widget.Toast;
 import android.content.Context;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+// AppCompatActivity - provides ActionBar at the top.
+// FragemntActivity - doesn't :)
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     public static final int PERMISSIONS_ACCESS_FINE_LOCATION = 1;
     public static final int PERMISSIONS_ACCESS_COARSE_LOCATION = 2;
@@ -32,6 +36,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Toolbar myToolbar = findViewById(R.id.maps_toolbar);
+        //setSupportActionBar(myToolbar);
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setTitle("Gdzie browar?");
+            // getSupportActionBar().setHomeButtonEnabled(true);
+            // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         // OK, let's deal with the stupid permissions first.
         checkPerm(Manifest.permission.ACCESS_FINE_LOCATION, PERMISSIONS_ACCESS_FINE_LOCATION);
