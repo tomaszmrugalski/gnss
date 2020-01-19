@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -57,25 +58,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        Button bt1 = (Button) findViewById(R.id.button_stores);
-        bt1.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                launchPoiActivity();
-            }
-        });
-
-        Button bt2 = (Button) findViewById(R.id.button_gps);
-        bt2.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                launchGpsActivity();
-            }
-        });
-
     }
 
     @Override
@@ -84,6 +66,35 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         inflater.inflate(R.menu.menu, menu);
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+
+        switch (item.getItemId())
+        {
+            case R.id.menu_map:
+                Toast.makeText(this, "Mapa", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.menu_stores:
+                Toast.makeText(this, "Sklepy", Toast.LENGTH_SHORT).show();
+                launchPoiActivity();
+                return true;
+
+            case R.id.menu_gps:
+                Toast.makeText(this, "GPS", Toast.LENGTH_SHORT).show();
+                launchGpsActivity();
+                return true;
+
+            case R.id.menu_about:
+                Toast.makeText(this, "About", Toast.LENGTH_SHORT).show();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     protected void checkPerm(java.lang.String perm, int requestCode) {

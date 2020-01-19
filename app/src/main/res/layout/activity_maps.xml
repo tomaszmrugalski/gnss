@@ -8,20 +8,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <Button
-        android:id="@+id/button_stores"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sklepy" />
-
-    <Button
-        android:id="@+id/button_gps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
-        android:layout_toEndOf="@+id/button_stores"
-        android:text="GPS" />
-
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
