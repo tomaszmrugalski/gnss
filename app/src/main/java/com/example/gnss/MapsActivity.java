@@ -1,8 +1,11 @@
 package com.example.gnss;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,14 +18,26 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import android.widget.Toast;
+import android.content.Context;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+
+    public static final int PERMISSIONS_ACCESS_FINE_LOCATION = 1;
+    public static final int PERMISSIONS_ACCESS_COARSE_LOCATION = 2;
+    public static final int PERMISSIONS_WRITE_EXTERNAL_STORAGE = 3;
 
     private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // OK, let's deal with the stupid permissions first.
+        checkPerm(Manifest.permission.ACCESS_FINE_LOCATION, PERMISSIONS_ACCESS_FINE_LOCATION);
+        checkPerm(Manifest.permission.ACCESS_COARSE_LOCATION, PERMISSIONS_ACCESS_COARSE_LOCATION);
+        checkPerm(Manifest.permission.WRITE_EXTERNAL_STORAGE, PERMISSIONS_WRITE_EXTERNAL_STORAGE);
+
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -49,6 +64,56 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    protected void checkPerm(java.lang.String perm, int requestCode) {
+        if (ActivityCompat.checkSelfPermission(this, perm) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[] {perm}, requestCode);
+            return;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        String txt = "Nothing...";
+        switch (requestCode) {
+            case PERMISSIONS_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    txt = "Fine location granted!";
+                } else {
+                    txt = "Fine location rejected. Doh :(";
+                }
+                break;
+            }
+            case PERMISSIONS_ACCESS_COARSE_LOCATION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    txt = "Coarse location granted!";
+                } else {
+                    txt = "Coarse location rejected. Doh :(";
+                }
+
+                break;
+            }
+            case PERMISSIONS_WRITE_EXTERNAL_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    txt = "Write external storage granted!";
+                } else {
+                    txt = "Write external storage rejected. Doh :(";
+                }
+                break;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
+
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, txt, duration);
+        toast.show();
+
+    }
+
 
     /**
      * Manipulates the map once available.
@@ -62,6 +127,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+        }
 
         addMarkers();
     }
