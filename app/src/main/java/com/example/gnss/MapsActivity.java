@@ -11,8 +11,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,7 +25,8 @@ import android.content.Context;
 
 // AppCompatActivity - provides ActionBar at the top.
 // FragmentActivity - doesn't :)
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity
+        implements OnMapReadyCallback {
 
     public static final int PERMISSIONS_ACCESS_FINE_LOCATION = 1;
     public static final int PERMISSIONS_ACCESS_COARSE_LOCATION = 2;
@@ -166,18 +165,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         addMarkers();
+
+        // Zoom in on Wrzeszcz
+        LatLng last_pos = new LatLng(54.3725, 18.6138);
+        mMap.moveCamera((CameraUpdateFactory.newLatLng(last_pos)));
     }
 
     private void addMarkers() {
         final ArrayList<Poi> pois = PoiList.getInstance().pois_;
 
-        LatLng last_pos = new LatLng(54, 18);
         for (Poi poi : pois) {
             LatLng pos = new LatLng(poi.lat, poi.lon);
             mMap.addMarker(new MarkerOptions().position(pos).title(poi.descr));
-            last_pos = pos;
         }
-        mMap.moveCamera((CameraUpdateFactory.newLatLng(last_pos)));
     }
 
     private void launchPoiActivity() {
