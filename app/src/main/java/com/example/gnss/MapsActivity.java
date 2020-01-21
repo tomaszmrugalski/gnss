@@ -11,6 +11,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +22,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -32,6 +35,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -377,8 +382,31 @@ public class MapsActivity extends AppCompatActivity
     }
 
 
+    int getCurrentHours() {
+
+        // for debugging purposes
+        return 910; // 9:10 am;
+
+        // Calendar c = Calendar.getInstance();
+        // return c.get(Calendar.HOUR_OF_DAY)*100 + c.get(Calendar.MINUTE);
+    }
+
+    Poi.Day getCurrentDayOfWeek() {
+        Calendar c = Calendar.getInstance();
+        int d = c.get(Calendar.DAY_OF_WEEK);
+        if ( (Calendar.MONDAY <= d) && (d <= Calendar.FRIDAY) ) {
+            return Poi.Day.MONFRI;
+        } else if (d == Calendar.SATURDAY) {
+            return Poi.Day.SAT;
+        } else {
+            return Poi.Day.SUN;
+        }
+    }
+
     private void addMarkers() {
         final ArrayList<Poi> pois = PoiList.getInstance().pois_;
+
+        getCurrentDayOfWeek();
 
         for (Poi poi : pois) {
             LatLng pos = new LatLng(poi.lat, poi.lon);
@@ -386,6 +414,12 @@ public class MapsActivity extends AppCompatActivity
             dest_.position(pos);
             dest_.title(poi.descr);
             dest_.snippet(poi.getTextHours());
+
+            if (poi.open(getCurrentDayOfWeek(), getCurrentHours())) {
+                dest_.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            } else {
+                dest_.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            }
             if (source_ == null){
                 source_ = dest_;
             }
@@ -417,7 +451,9 @@ public class MapsActivity extends AppCompatActivity
         public View getInfoContents(Marker marker) {
 
             TextView tvTitle = ((TextView)myContentsView.findViewById(R.id.title));
-            tvTitle.setText(marker.getTitle());
+            SpannableString titleText = new SpannableString(marker.getTitle());
+            titleText.setSpan(new ForegroundColorSpan(Color.RED), 0, titleText.length(), 0);
+            tvTitle.setText(titleText);
             TextView tvSnippet = ((TextView)myContentsView.findViewById(R.id.snippet));
             tvSnippet.setText(marker.getSnippet());
 
