@@ -67,6 +67,13 @@ public class Poi {
         return t;
     }
 
+    public String getTextHours() {
+        String t = "Pon-pt: " + String.format("%02d:%02d - %02d:%02d", monfri_.open_/100, monfri_.open_%100, monfri_.close_/100, monfri_.close_%100) + "\n";
+        t += "Sob: " + String.format("%02d:%02d - %02d:%02d", sat_.open_/100, sat_.open_%100, sat_.close_/100, sat_.close_%100) + "\n";
+        t += "Niedz: " + String.format("%02d:%02d - %02d:%02d", sun_.open_/100, sun_.open_%100, sun_.close_/100, sun_.close_%100) + "\n";
+        return t;
+    }
+
     public double lon;
     public double lat;
     public String descr;

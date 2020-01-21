@@ -21,6 +21,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -34,6 +35,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Context;
 
@@ -78,6 +81,7 @@ public class MapsActivity extends AppCompatActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
     }
 
     private void navigate() {
@@ -303,6 +307,9 @@ public class MapsActivity extends AppCompatActivity
         // Zoom in on Wrzeszcz
         LatLng last_pos = new LatLng(54.3725, 18.6138);
         mMap.moveCamera((CameraUpdateFactory.newLatLng(last_pos)));
+
+        // Install our own display window adapter
+        mMap.setInfoWindowAdapter(new MyInfoWindowAdapter());
     }
 
     private String getDirectionsUrl(LatLng origin, LatLng dest) {
@@ -376,6 +383,9 @@ public class MapsActivity extends AppCompatActivity
         for (Poi poi : pois) {
             LatLng pos = new LatLng(poi.lat, poi.lon);
             dest_ = new MarkerOptions().position(pos).title(poi.descr);
+            dest_.position(pos);
+            dest_.title(poi.descr);
+            dest_.snippet(poi.getTextHours());
             if (source_ == null){
                 source_ = dest_;
             }
@@ -391,5 +401,34 @@ public class MapsActivity extends AppCompatActivity
     private void launchGpsActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+
+    /** Demonstrates customizing the info window and/or its contents. */
+    class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+
+        private final View myContentsView;
+
+        MyInfoWindowAdapter(){
+            myContentsView = getLayoutInflater().inflate(R.layout.marker_info, null);
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+
+            TextView tvTitle = ((TextView)myContentsView.findViewById(R.id.title));
+            tvTitle.setText(marker.getTitle());
+            TextView tvSnippet = ((TextView)myContentsView.findViewById(R.id.snippet));
+            tvSnippet.setText(marker.getSnippet());
+
+            return myContentsView;
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
     }
 }
