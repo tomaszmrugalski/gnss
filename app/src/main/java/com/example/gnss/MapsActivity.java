@@ -100,14 +100,20 @@ public class MapsActivity extends AppCompatActivity
 
     private void navigate() {
 
-        if (dest_ == null){
+        if (dest_ == null) {
+            Toast.makeText(this, "Cel nie wybrany", Toast.LENGTH_SHORT).show();
+
             return;
         }
 
-        mMap.clear();
+        Location l = gpsListener_.prevLocation;
+        if (l == null) {
+            Toast.makeText(this, "GPS nie odbiera.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+            mMap.clear();
         addMarkers();
 
-        Location l = gpsListener_.prevLocation;
         String t = String.format("Navigate from %4.2f:%4.2f", l.getLongitude(), l.getLatitude());
         Toast.makeText(this, t, Toast.LENGTH_LONG).show();
 
