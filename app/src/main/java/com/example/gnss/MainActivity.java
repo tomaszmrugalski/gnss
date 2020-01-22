@@ -38,17 +38,14 @@ public class MainActivity extends AppCompatActivity {
         TextView nmea = findViewById(R.id.nmea);
         nmea.setMovementMethod(new ScrollingMovementMethod());
 
-        /*
-         nmeaListener = new ThNMEAListener();
-         nmeaListener.debug = nmea;
-                gpsListener = new ThGpsListener();
-                gpsListener.tv = findViewById(R.id.tv);
-                gpsListener.debug = findViewById(R.id.nmea);
-                gpsListener.pref = pref;
+        nmeaListener = new ThNMEAListener();
+        nmeaListener.debug = nmea;
+        gpsListener = new ThGpsListener();
+        gpsListener.tv = findViewById(R.id.tv);
+        gpsListener.pref = pref;
         registerListener();
-        */
 
-        Button bt1 = (Button) findViewById(R.id.button);
+        Button bt1 = findViewById(R.id.button);
         bt1.setOnClickListener(new View.OnClickListener() {
 
             @Override
