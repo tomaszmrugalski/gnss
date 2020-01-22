@@ -2,4 +2,5 @@
     <string name="app_name">Gdzie browar</string>
     <string name="title_activity_poi">Sklepy</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_about"></string>
 </resources>

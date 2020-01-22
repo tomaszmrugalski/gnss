@@ -161,7 +161,6 @@ public class MapsActivity extends AppCompatActivity
         switch (item.getItemId())
         {
             case R.id.navigate:
-                // Toast.makeText(this, "Nawiguj!", Toast.LENGTH_SHORT).show();
                 navigate();
                 return true;
 
@@ -170,17 +169,15 @@ public class MapsActivity extends AppCompatActivity
                 return true;
 
             case R.id.menu_stores:
-                Toast.makeText(this, "Sklepy", Toast.LENGTH_SHORT).show();
                 launchPoiActivity();
                 return true;
 
             case R.id.menu_gps:
-                Toast.makeText(this, "GPS", Toast.LENGTH_SHORT).show();
                 launchGpsActivity();
                 return true;
 
             case R.id.menu_about:
-                Toast.makeText(this, "About", Toast.LENGTH_SHORT).show();
+                launchAboutActivity();
                 return true;
 
             default:
@@ -470,6 +467,10 @@ public class MapsActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+    private void launchAboutActivity() {
+        Intent intent = new Intent(this, AboutActivity.class);
+        startActivity(intent);
+    }
 
     /** Demonstrates customizing the info window and/or its contents. */
     class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
