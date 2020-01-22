@@ -9,6 +9,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -56,6 +58,9 @@ public class MapsActivity extends AppCompatActivity
     public static final int PERMISSIONS_ACCESS_COARSE_LOCATION = 2;
     public static final int PERMISSIONS_WRITE_EXTERNAL_STORAGE = 3;
 
+    private LocationManager lm_;
+    private ThGpsListener gpsListener_;
+
     ProgressDialog progressDialog_;
 
     private MarkerOptions source_;
@@ -87,12 +92,37 @@ public class MapsActivity extends AppCompatActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        lm_ = (LocationManager) getSystemService(LOCATION_SERVICE);
+        gpsListener_ = new ThGpsListener();
+        gpsListener_.tv = findViewById(R.id.tv);
+        registerListener();
     }
 
     private void navigate() {
-        if (source_ == null || dest_ == null){
+
+        if (dest_ == null){
             return;
         }
+
+        mMap.clear();
+        addMarkers();
+
+        Location l = gpsListener_.prevLocation;
+        String t = String.format("Navigate from %4.2f:%4.2f", l.getLongitude(), l.getLatitude());
+        Toast.makeText(this, t, Toast.LENGTH_LONG).show();
+
+        LatLng pos = new LatLng(l.getLatitude(), l.getLongitude());
+        source_ = new MarkerOptions().position(pos).title("Start!");
+        source_.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
+        // Add our starting position.
+        mMap.addMarker(source_);
+
+        if (source_ == null){
+            source_ = dest_;
+        }
+        mMap.addMarker(dest_);
+
 
         //source_ = new MarkerOptions()
 
@@ -125,7 +155,7 @@ public class MapsActivity extends AppCompatActivity
         switch (item.getItemId())
         {
             case R.id.navigate:
-                Toast.makeText(this, "Nawiguj!", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, "Nawiguj!", Toast.LENGTH_SHORT).show();
                 navigate();
                 return true;
 
@@ -410,20 +440,17 @@ public class MapsActivity extends AppCompatActivity
 
         for (Poi poi : pois) {
             LatLng pos = new LatLng(poi.lat, poi.lon);
-            dest_ = new MarkerOptions().position(pos).title(poi.descr);
-            dest_.position(pos);
-            dest_.title(poi.descr);
-            dest_.snippet(poi.getTextHours());
+            MarkerOptions m = new MarkerOptions().position(pos).title(poi.descr);
+            m.position(pos);
+            m.title(poi.descr);
+            m.snippet(poi.getTextHours());
 
             if (poi.open(getCurrentDayOfWeek(), getCurrentHours())) {
-                dest_.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                m.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
             } else {
-                dest_.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                m.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             }
-            if (source_ == null){
-                source_ = dest_;
-            }
-            mMap.addMarker(dest_);
+            mMap.addMarker(m);
         }
     }
 
@@ -463,8 +490,18 @@ public class MapsActivity extends AppCompatActivity
         @Override
         public View getInfoWindow(Marker marker) {
             // TODO Auto-generated method stub
+            dest_ = new MarkerOptions().position(marker.getPosition());
+            String t = "Dest:" + String.format("%6.4f, %6.4f", marker.getPosition().longitude, marker.getPosition().latitude);
+            //.makeText(this, t, Toast.LENGTH_LONG).show();
             return null;
         }
 
     }
+
+    protected void registerListener() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            lm_.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsListener_);
+        }
+    }
+
 }

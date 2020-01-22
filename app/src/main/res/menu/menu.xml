@@ -10,7 +10,7 @@
         android:title="Sklepy" />
 
     <item android:id="@+id/menu_gps"
-        android:title="GPS info" />
+        android:title="Debug" />
 
     <item android:id="@+id/menu_about"
         android:title="O apce" />

@@ -19,8 +19,8 @@ import static android.location.Location.FORMAT_SECONDS;
 public class ThGpsListener implements LocationListener {
 
     public TextView tv;
-    public TextView debug;
     public SharedPreferences.Editor pref;
+    public Location prevLocation = null;
 
     @Override
     public void onLocationChanged(Location location) {
@@ -41,8 +41,6 @@ public class ThGpsListener implements LocationListener {
     public void onProviderDisabled(String provider) {
         // debug.append("onProviderDisabled ");
     }
-
-    Location prevLocation = null;
 
     private void przetwarzajLokalizacje(Location location) {
         // debug.append(". ");
@@ -72,15 +70,11 @@ public class ThGpsListener implements LocationListener {
         Date d;
         d = new Date(location.getTime());
 
-        // Write the contents to a location.txt file
-        writeToFile("location.txt", d.toString() + ": " + info);
-
-
         info = "" + d.toString() + "\n" + info + "\n" + "Nearest POI: " + getNearestPoi(location);
-        tv.setText(info);
+        if (tv != null) {
+            tv.setText(info);
+        }
         prevLocation = location;
-
-        savePreferences(location);
     }
 
     String getNearestPoi(Location l) {
@@ -143,7 +137,6 @@ public class ThGpsListener implements LocationListener {
     void savePreferences(Location l) {
         pref.putString("lat", String.format("%2.4f", l.getLatitude()));
         pref.putString("long", String.format("%2.4f", l.getLongitude()));
-
     }
 
 }
